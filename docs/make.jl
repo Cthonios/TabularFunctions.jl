@@ -35,6 +35,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/cthonios/TabularFunctions.jl",
+    repo="github.com/Cthonios/TabularFunctions.jl",
     devbranch="main"
 )
