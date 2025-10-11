@@ -1,3 +1,4 @@
+import TabularFunctions: BadMacroInput
 import TabularFunctions: XsNotMonotonicallyIncreasing
 using Adapt
 using Aqua
@@ -24,6 +25,52 @@ end
 @testset "Error checking" begin
     @test_throws AssertionError PiecewiseLinearFunction([0., 1.], [0., 1., 2.])
     @test_throws XsNotMonotonicallyIncreasing PiecewiseLinearFunction([0., 0.1, -0.1, 1.], [0., 0., 0., 0.])
+
+    code = """
+    @piecewise_analytic begin
+        0.0          # malformed
+        1.0, cos
+    end
+    """
+    @test_throws LoadError eval(Meta.parse(code))
+
+    # code = """
+    # @piecewise_linear begin
+    #     0.0
+    #     1.0, 1.0
+    # end
+    # """
+    # @test_throws LoadError eval(Meta.parse(code))
+end
+
+@testset "Macros" begin 
+    func = @piecewise_analytic begin
+        0.0, sin
+        1.0, cos
+    end
+    @test func(0.5) == sin(0.5)
+    @test func(1.5) == cos(1.5)
+
+    func = @piecewise_analytic begin
+        0.0, x -> sin(x)
+        1.0, x -> cos(x)
+    end
+    @test func(0.5) == sin(0.5)
+    @test func(1.5) == cos(1.5)
+
+    func = @piecewise_analytic begin
+        0.0, 0.0
+        1.0, sin
+    end
+    @test func(0.5) == 0.0
+    @test func(1.5) == sin(1.5)
+
+    func = @piecewise_linear begin
+        0.0,  0.0
+        0.25, 0.25
+        1.0,  1.0
+    end
+    @test func(0.5) == 0.5
 end
 
 @testset "PiecewiseAnalyticFunction - Identity function" begin
@@ -76,36 +123,6 @@ end
     @test f(0.85) ≈ 0.725
     @test f(0.95) ≈ 0.905
     @test f(1.05) ≈ 1.
-end
-
-@testset "Macros" begin 
-    func = @piecewise_analytic begin
-        0.0, sin
-        1.0, cos
-    end
-    @test func(0.5) == sin(0.5)
-    @test func(1.5) == cos(1.5)
-
-    func = @piecewise_analytic begin
-        0.0, x -> sin(x)
-        1.0, x -> cos(x)
-    end
-    @test func(0.5) == sin(0.5)
-    @test func(1.5) == cos(1.5)
-
-    func = @piecewise_analytic begin
-        0.0, 0.0
-        1.0, sin
-    end
-    @test func(0.5) == 0.0
-    @test func(1.5) == sin(1.5)
-
-    func = @piecewise_linear begin
-        0.0,  0.0
-        0.25, 0.25
-        1.0,  1.0
-    end
-    @test func(0.5) == 0.5
 end
 
 # Aqua testing

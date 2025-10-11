@@ -203,6 +203,14 @@ function _is_number_expr(ex)
     return ex isa Number
 end
 
+struct BadMacroInput <: Exception
+    msg::String
+end
+
+function _bad_macro_input(msg::String)
+    throw(BadMacroInput(msg))
+end
+
 """
 $(TYPEDSIGNATURES)
 Example:
@@ -233,7 +241,10 @@ macro piecewise_analytic(expr)
         elseif line isa LineNumberNode
             continue
         else
-            error("@piecewise_analytic: each line must be 'x, func'")
+            _bad_macro_input(
+                "@piecewise_analytic: each line must be 'x, func'" *
+                "\nbad line provided: $line"
+            )
         end
     
         x_expr = esc(args[1])
@@ -279,7 +290,10 @@ macro piecewise_linear(expr)
             push!(xs, esc(p.args[1]))
             push!(ys, esc(p.args[2]))
         else
-            error("@piecewise_linear: each line must be 'x, y'")
+            _bad_macro_input(
+                "@piecewise_linear: each line must be 'x, y'" *
+                "\nbad line provided: $line"
+            )
         end
     end
 
