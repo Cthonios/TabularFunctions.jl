@@ -2,6 +2,7 @@ import TabularFunctions: BadMacroInput
 import TabularFunctions: XsNotMonotonicallyIncreasing
 using Adapt
 using Aqua
+using KernelAbstractions
 using TabularFunctions
 using Test
 
@@ -25,6 +26,7 @@ end
 @testset "Error checking" begin
     @test_throws AssertionError PiecewiseLinearFunction([0., 1.], [0., 1., 2.])
     @test_throws XsNotMonotonicallyIncreasing PiecewiseLinearFunction([0., 0.1, -0.1, 1.], [0., 0., 0., 0.])
+    @test_throws XsNotMonotonicallyIncreasing PiecewiseAnalyticFunction([1., 0.], [sin, cos])
 
     code = """
     @piecewise_analytic begin
@@ -71,6 +73,12 @@ end
         1.0,  1.0
     end
     @test func(0.5) == 0.5
+
+    # just to cover Base.show method
+    @show func
+
+    # just to cover get backend method
+    @test get_backend(func) == CPU()
 end
 
 @testset "PiecewiseAnalyticFunction - Identity function" begin
