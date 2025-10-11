@@ -1,5 +1,6 @@
 import TabularFunctions: XsNotMonotonicallyIncreasing
 using Adapt
+using Aqua
 using TabularFunctions
 using Test
 
@@ -85,10 +86,29 @@ end
     @test func(0.5) == sin(0.5)
     @test func(1.5) == cos(1.5)
 
+    func = @piecewise_analytic begin
+        0.0, x -> sin(x)
+        1.0, x -> cos(x)
+    end
+    @test func(0.5) == sin(0.5)
+    @test func(1.5) == cos(1.5)
+
+    func = @piecewise_analytic begin
+        0.0, 0.0
+        1.0, sin
+    end
+    @test func(0.5) == 0.0
+    @test func(1.5) == sin(1.5)
+
     func = @piecewise_linear begin
         0.0,  0.0
         0.25, 0.25
         1.0,  1.0
     end
     @test func(0.5) == 0.5
+end
+
+# Aqua testing
+@testset "Aqua.jl" begin
+    Aqua.test_all(TabularFunctions)
 end

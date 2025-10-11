@@ -163,6 +163,15 @@ function (func::PiecewiseLinearFunction{V1, V2})(x::T) where {
 end
 
 # Macros
+function _is_number_expr(ex)
+    # unwrap top-level :$ and :escape wrappers
+    while ex isa Expr && ex.head in (:escape, :$, :quote)
+        ex = ex.args[1]
+    end
+
+    return ex isa Number
+end
+
 macro piecewise_analytic(expr)
     # Extract expressions inside the block
     lines = expr isa Expr && expr.head == :block ? expr.args : [expr]
@@ -173,8 +182,6 @@ macro piecewise_analytic(expr)
     for line in lines
         args = if line isa Expr && line.head == :tuple
             line.args
-        # elseif line isa Expr && line.head == :call && line.args[1] === :(,)
-        #     line.args[2:3]  # skip the first element, which is the comma operator
         elseif line isa LineNumberNode
             continue
         else
@@ -184,7 +191,8 @@ macro piecewise_analytic(expr)
         x_expr = esc(args[1])
         f_expr = esc(args[2])
         # wrap numbers into constant functions
-        if f_expr isa Number
+
+        if _is_number_expr(f_expr)
             f_expr = :(x -> $(f_expr))
         end
     
