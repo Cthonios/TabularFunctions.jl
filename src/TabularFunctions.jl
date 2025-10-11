@@ -22,7 +22,9 @@ function Base.show(io::IO, ::XsNotMonotonicallyIncreasing)
 end
 
 function _monotonic_error()
-    throw(XsNotMonotonicallyIncreasing())
+    exc = XsNotMonotonicallyIncreasing()
+    @show exc
+    throw(exc)
 end
 
 # Abstract types

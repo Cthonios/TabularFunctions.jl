@@ -39,6 +39,7 @@ $$
 then we can use the maco ```@piecewise_analytic``` to define the above function as follows
 
 ```jldoctest analytic
+using Plots
 using TabularFunctions
 func = @piecewise_analytic begin
     0.0, x -> x
@@ -64,6 +65,16 @@ y = func(x)
 
 # output
 2.25
+```
+
+If you have loaded ```Plots.jl``` or any other plotting package that can leverage ```RecipesBase.jl```, then you can readily plot types in ```TabularFunctions.jl``` using the following syntax (```Plots.jl```)
+```jldoctest analytic
+xs = -5.:0.01:5. |> collect
+p = plot(xs, func)
+nothing
+
+# output
+
 ```
 
 Note that closures are not necessary in the macro definition. The following is also valid syntax for the ```@piecewise_analytic``` macro
