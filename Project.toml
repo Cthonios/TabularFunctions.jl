@@ -8,17 +8,26 @@ Adapt = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 KernelAbstractions = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
 
+[extensions]
+TabularFunctionsRecipesBaseExt = "RecipesBase"
+
+[weakdeps]
+RecipesBase = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
+
 [compat]
 Adapt = "4"
 Aqua = "0.8"
 DocStringExtensions = "0.9"
 KernelAbstractions = "0.9"
+Plots = "1"
+RecipesBase = "1"
 Test = "1"
 julia = "1"
 
 [extras]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Aqua", "Test"]
+test = ["Aqua", "Plots", "Test"]
