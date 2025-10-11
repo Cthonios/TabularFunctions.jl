@@ -1,16 +1,17 @@
 name = "TabularFunctions"
 uuid = "7add9882-6fce-4afb-882d-af036a41bc9c"
-authors = ["Craig M. Hamel <cmhamel32@gmail.com>"]
 version = "0.1.0"
+authors = ["Craig M. Hamel <cmhamel32@gmail.com>"]
 
-[weakdeps]
+[deps]
 Adapt = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
-
-[extensions]
-TabularFunctionsAdaptExt = ["Adapt"]
+DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
+KernelAbstractions = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
 
 [compat]
 Adapt = "4"
+DocStringExtensions = "0.9"
+KernelAbstractions = "0.9"
 Test = "1"
 julia = "1"
 
@@ -18,4 +19,4 @@ julia = "1"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Adapt", "Test"]
+test = ["Test"]
