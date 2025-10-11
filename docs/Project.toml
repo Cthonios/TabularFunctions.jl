@@ -1,0 +1,3 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+TabularFunctions = "7add9882-6fce-4afb-882d-af036a41bc9c"

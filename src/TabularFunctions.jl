@@ -10,6 +10,10 @@ using DocStringExtensions
 using KernelAbstractions
 
 # Error helpers
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct XsNotMonotonicallyIncreasing <: Exception
 end
 
@@ -22,24 +26,35 @@ function _monotonic_error()
 end
 
 # Abstract types
+"""
+$(TYPEDEF)
+"""
 abstract type AbstractTabularFunction{
     V <: AbstractVector{<:Number}
 } end
 
-
+"""
+$(TYPEDSIGNATURES)
+"""
 function KernelAbstractions.get_backend(f::AbstractTabularFunction)
     return get_backend(f.x_vals)
 end
 
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct PiecewiseAnalyticFunction{
     V <: AbstractVector{<:Number},
-    # Funcs <: NamedTuple
     Funcs
 } <: AbstractTabularFunction{V}
     x_vals::V
     funcs::Funcs
 end
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function PiecewiseAnalyticFunction(
     xs::V, funcs::Funcs
 ) where {
@@ -60,6 +75,9 @@ function PiecewiseAnalyticFunction(
     return PiecewiseAnalyticFunction(xs, funcs)
 end
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function Adapt.adapt_structure(to, func::PiecewiseAnalyticFunction)
     return PiecewiseAnalyticFunction(
         adapt(to, func.x_vals),
@@ -78,6 +96,9 @@ function _func(func::PiecewiseAnalyticFunction, x, ::CPU)
     end
 end
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function (func::PiecewiseAnalyticFunction{V1, Funcs})(x::T) where {
     T <: Number,
     V1 <: AbstractVector{T}, 
@@ -87,6 +108,10 @@ function (func::PiecewiseAnalyticFunction{V1, Funcs})(x::T) where {
 end
 
 # Piecewise Linear
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct PiecewiseLinearFunction{
     V1 <: AbstractVector{<:Number},
     V2 <: AbstractVector{<:Number}
@@ -113,6 +138,9 @@ struct PiecewiseLinearFunction{
     end
 end
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function Adapt.adapt_structure(to, f::PiecewiseLinearFunction)
     return PiecewiseLinearFunction(
         adapt(to, f.x_vals), 
@@ -154,6 +182,9 @@ function _func(func, x, ::Backend)
     # kernel!(func, x, ndrange = length(func.x_vals) + 1)
 end
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function (func::PiecewiseLinearFunction{V1, V2})(x::T) where {
     T <: Number,
     V1 <: AbstractVector{T}, 
@@ -172,6 +203,23 @@ function _is_number_expr(ex)
     return ex isa Number
 end
 
+"""
+$(TYPEDSIGNATURES)
+Example:
+Define a function that switches between a linear and quadratic function
+```jldoctest
+func = @piecewise_analytic begin
+    0.0, x -> x
+    1.0, x -> x^2
+end
+
+func(0.)
+
+# output
+0.0
+
+```
+"""
 macro piecewise_analytic(expr)
     # Extract expressions inside the block
     lines = expr isa Expr && expr.head == :block ? expr.args : [expr]
@@ -204,6 +252,18 @@ macro piecewise_analytic(expr)
     # end
 end
 
+"""
+$(TYPEDSIGNATURES)
+Example:
+Define a triangular wave of a single period
+```julia
+func = @piecewise_linear begin
+    0.0, 0.0
+    0.5, 1.0
+    1.0, 0.0
+end
+```
+"""
 macro piecewise_linear(expr)
     # Get the expressions inside the block
     pairs = expr isa Expr && expr.head == :block ? expr.args : [expr]
