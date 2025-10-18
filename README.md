@@ -15,13 +15,6 @@ either tabular data, e.g. (x, y) pairs, or tables of functions
 to aid in simply writing piecewise analytic functions.
 
 # Installation
-Currently ```TabularFunctions.jl``` has not been registered. To install, one
-can do the following in the package manager
-```julia
-pkg> add https://github.com/Cthonios/TabularFunctions.jl/
-```
-
-## Future instructions
 From the package manager simply type
 ```julia
 pkg> add TabularFunctions
