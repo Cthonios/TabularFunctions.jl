@@ -33,7 +33,7 @@ $(TYPEDEF)
 """
 abstract type AbstractTabularFunction{
     V <: AbstractVector{<:Number}
-} end
+} <: Function end
 
 """
 $(TYPEDSIGNATURES)
