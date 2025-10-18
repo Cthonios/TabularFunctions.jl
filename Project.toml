@@ -1,6 +1,6 @@
 name = "TabularFunctions"
 uuid = "7add9882-6fce-4afb-882d-af036a41bc9c"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Craig M. Hamel <cmhamel32@gmail.com>"]
 
 [deps]
